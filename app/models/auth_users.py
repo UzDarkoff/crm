@@ -50,7 +50,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_student = models.BooleanField(default=False)
     is_teacher = models.BooleanField(default=False)
     group = models.ForeignKey('GroupStudent', on_delete=models.SET_NULL, null=True, blank=True)
-
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'phone_number'

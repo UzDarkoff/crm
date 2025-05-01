@@ -2,18 +2,17 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import permissions
 from app.models.student_model import Student
-from app.paginations import StandardResultsSetPagination  # Paginationni import qilish
+from app.paginations import StandardResultsSetPagination
 from datetime import datetime
+from rest_framework.permissions import IsAuthenticated
 
 class StudentStatisticsView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-    pagination_class = StandardResultsSetPagination  # Paginationni viewsda ishlatish
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         start_date = request.query_params.get('start_date')
         end_date = request.query_params.get('end_date')
 
-        # Sanalar mavjud bo'lsa, o'sha vaqtlarga moslashtirib filtrlaymiz
         if start_date and end_date:
             start_date = datetime.strptime(start_date, "%Y-%m-%d")
             end_date = datetime.strptime(end_date, "%Y-%m-%d")
@@ -24,14 +23,18 @@ class StudentStatisticsView(APIView):
         else:
             students_in_range = Student.objects.all()
 
-        # Pagination qo'llash
-        paginator = self.pagination_class()
+        # Hisoblashlar — to‘g‘ridan-to‘g‘ri to‘liq querysetdan
+        ongoing_students_count = students_in_range.filter(status='ongoing').count()
+        graduated_students_count = students_in_range.filter(status='graduated').count()
+        total_students_count = students_in_range.count()
+
+        # Faqatgina student listini paginate qilish
+        paginator = StandardResultsSetPagination()
         result_page = paginator.paginate_queryset(students_in_range, request)
 
-        ongoing_students_count = result_page.filter(status='ongoing').count()
-        graduated_students_count = result_page.filter(status='graduated').count()
-
         return paginator.get_paginated_response({
-            'ongoing_students_count': ongoing_students_count,
-            'graduated_students_count': graduated_students_count
+            'total': total_students_count,
+            'ongoing': ongoing_students_count,
+            'graduated': graduated_students_count,
+            'students': [student.id for student in result_page]  # yoki serializer orqali qaytarishingiz mumkin
         })

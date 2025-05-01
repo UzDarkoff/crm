@@ -1,5 +1,6 @@
 from rest_framework import viewsets
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 
 from app import permissions
 from app.models.student_model import Student
@@ -22,7 +23,7 @@ class StudentViewSet(viewsets.ModelViewSet):
         return [permission() for permission in permission_classes]
 
 class StudentListCreateView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     pagination_class = StandardResultsSetPagination
 
     def get(self, request):

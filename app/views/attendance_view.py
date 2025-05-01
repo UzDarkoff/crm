@@ -1,8 +1,8 @@
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
 from app.models.attendance_model import Attendance
 from app.serializers.attendance_serializer import AttendanceSerializer
 from app.permissions import IsTeacherOrAdmin
+from rest_framework.permissions import IsAuthenticated
 
 class AttendanceViewSet(viewsets.ModelViewSet):
     queryset = Attendance.objects.all()

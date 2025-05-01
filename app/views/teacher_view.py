@@ -1,6 +1,7 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 
 from app import permissions
 from app.models.teacher_model import Teacher
@@ -24,7 +25,7 @@ class TeacherViewSet(viewsets.ModelViewSet):
 
 
 class TeacherListCreateView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         teachers = Teacher.objects.all()
@@ -40,7 +41,7 @@ class TeacherListCreateView(APIView):
 
 
 class TeacherDetailView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, pk):
         try:

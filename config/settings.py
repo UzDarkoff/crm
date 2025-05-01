@@ -36,10 +36,23 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app',
-    'accounts',
     'rest_framework',
-    'rest_framework_simplejwt.token_blacklist'
+    'rest_framework_simplejwt.token_blacklist',
+    'django_otp',
+    'django_otp.plugins.otp_totp'
 ]
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+AUTH_USER_MODEL = 'app.User'
+
+SIMPLE_JWT = {
+    "AUTH_HEADER_TYPES": ("Bearer",),
+    "BLACKLIST_AFTER_ROTATION": True,
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -97,18 +110,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
-}
 
-AUTH_USER_MODEL = 'app.User'
-
-SIMPLE_JWT = {
-    "AUTH_HEADER_TYPES": ("Bearer",),
-    "BLACKLIST_AFTER_ROTATION": True,
-}
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/

@@ -28,27 +28,28 @@ class UserAdmin(BaseUserAdmin):
 # TeacherAdmin sozlamalari
 @admin.register(Teacher)
 class TeacherAdmin(admin.ModelAdmin):
-    list_display = ('user', 'group', 'subject')
+    list_display = ('user',)
     search_fields = ['group']
-    list_filter = ['group']  # Guruhga qarab filtr qilish imkoniyati
+    list_filter = []
 
 # StudentAdmin sozlamalari
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
-    list_display = ('user', 'group', 'enrollment_status')
+    list_display = ('user', 'status')
     search_fields = ['group']
-    list_filter = ['enrollment_status']  # Talabaning holatini filtr qilish
+    list_filter = ['status']  # Talabaning holatini filtr qilish
 
 @admin.register(Attendance)
 class AttendanceAdmin(admin.ModelAdmin):
     list_display = ('student', 'lesson', 'is_present', 'date')
     search_fields = ['student__user__phone_number', 'lesson__subject']
     list_filter = ['is_present', 'lesson__date']
-# UserAdminni admin saytiga qo'shish
-admin.site.register(User, UserAdmin)
 
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
     list_display = ('student', 'amount', 'date', 'status')
     search_fields = ['student__user__phone_number']
     list_filter = ['status', 'date']
+
+# UserAdminni admin saytiga qo'shish
+admin.site.register(User, UserAdmin)

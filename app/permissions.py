@@ -55,3 +55,7 @@ class IsAdminOrStaff(permissions.BasePermission):
     def has_permission(self, request, view):
         return request.user.is_admin or request.user.is_staff
 
+class IsStudentOrAdmin(permissions.BasePermission):
+    def has_permission(self, request, view):
+        user = request.user
+        return user.is_authenticated and (user.is_student or user.is_admin)
