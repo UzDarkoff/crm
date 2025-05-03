@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
     'django_otp',
-    'django_otp.plugins.otp_totp'
+    'django_otp.plugins.otp_totp',
+    'drf_yasg'
+
 ]
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -50,6 +52,14 @@ REST_FRAMEWORK = {
 AUTH_USER_MODEL = 'app.User'
 
 SIMPLE_JWT = {
+    "AUTH_HEADER_TYPES": ("Bearer",),
+    "BLACKLIST_AFTER_ROTATION": True,
+}
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),  # Access token muddati 30 daqiqa
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),     # Refresh token muddati 7 kun
     "AUTH_HEADER_TYPES": ("Bearer",),
     "BLACKLIST_AFTER_ROTATION": True,
 }

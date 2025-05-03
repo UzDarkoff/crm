@@ -1,16 +1,18 @@
 from django.db import models
-from .student_model import Student
-from .teacher_model import Teacher
-from .lesson_model import Lesson
+
+from app.models import User, GroupStudent
+
 
 class Attendance(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
-    is_present = models.BooleanField(default=False)  # Kelgan yoki kelmaganligini belgilaydi
-    date = models.DateField(auto_now_add=True)  # Yo'qlama sanasi
+    STATUS_CHOICES = (
+        ('present', 'Keldi'),
+        ('late', 'Kechikdi'),
+        ('absent', 'Kelmagan'),
+    )
+    student = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'is_student': True})
+    group = models.ForeignKey(GroupStudent, on_delete=models.CASCADE)
+    date = models.DateField(auto_now_add=True)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='absent')
 
     class Meta:
-        unique_together = ('student', 'lesson', 'date')  # Bir dars va talaba uchun bir vaqtni belgilash
-
-    def __str__(self):
-        return f"{self.student.user.phone_number} - {self.lesson.subject} - {self.is_present}"
+        unique_together = ('student', 'group', 'date')  # Bir kunga bitta yozuv bo‘lsin
